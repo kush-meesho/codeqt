@@ -9,11 +9,13 @@ RUN apt-get update && \
         ca-certificates \
         git \
         procps \
-        maven && \
+        maven \
+        golang-go && \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /root
-
+ENV GOPROXY=off
+ENV GOSUMDB=off
 # Download and extract CodeQL CLI
 RUN curl -L -o codeql.zip https://github.com/github/codeql-cli-binaries/releases/download/v2.21.3/codeql-linux64.zip && \
     unzip codeql.zip && \
@@ -28,8 +30,6 @@ ENV PATH="/usr/local/bin/codeql:${PATH}"
 # Copy and set up entrypoint script
 COPY entrypoint.sh /root/entrypoint.sh
 RUN chmod +x /root/entrypoint.sh
-# Create .m2 directory and copy settings file
-# RUN mkdir -p /root/.m2
-# COPY java-settings.xml /root/.m2/settings.xml
+
 
 

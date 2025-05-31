@@ -1,0 +1,16 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+
+      {
+        "type": "bashdb",
+        "request": "launch",
+        "name": "Bash-Debug",
+        "program": "${workspaceFolder}/codeq.sh",
+        "args": ["https://github.com/Meesho/ad-server"],
+        "env": {},
+        "cwd": "${workspaceFolder}"
+      }
+    ]
+  }
+  

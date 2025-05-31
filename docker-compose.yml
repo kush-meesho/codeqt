@@ -11,3 +11,6 @@ services:
     entrypoint: ["/root/entrypoint.sh"]
     stdin_open: true
     tty: true
+    environment:
+      - REPO_NAME=${REPO_NAME}
+      - LANGUAGE=${LANGUAGE}

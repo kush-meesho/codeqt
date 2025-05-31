@@ -1,11 +1,29 @@
 #!/bin/bash
 
-codeql database create codeql-db --language=java --source-root=target/repo/ads-campaign-management
-codeql pack download codeql/java-all
-codeql pack download codeql/java-queries
+# Check if REPO_NAME is set
+if [ -z "$REPO_NAME" ]; then
+    echo "Error: REPO_NAME environment variable is not set"
+    exit 1
+fi
+
+# Check if LANGUAGE is set
+if [ -z "$LANGUAGE" ]; then
+    echo "Error: LANGUAGE environment variable is not set"
+    exit 1
+fi
+
+# Validate language
+if [ "$LANGUAGE" != "java" ] && [ "$LANGUAGE" != "go" ]; then
+    echo "Error: Unsupported language '$LANGUAGE'. Must be either 'java' or 'go'"
+    exit 1
+fi
+
+codeql database create codeql-db --language="$LANGUAGE" --source-root="target/repo/$REPO_NAME"
+codeql pack download codeql/$LANGUAGE-all
+codeql pack download codeql/$LANGUAGE-queries
 codeql database analyze codeql-db \
-    codeql/java-queries:codeql-suites/java-security-and-quality.qls \
+    codeql/$LANGUAGE-queries:codeql-suites/$LANGUAGE-security-and-quality.qls \
     --format=sarif-latest \
-    --output=target/results/java-results.sarif \
+    --output=target/results/$LANGUAGE-results.sarif \
     --ram=10000
 
