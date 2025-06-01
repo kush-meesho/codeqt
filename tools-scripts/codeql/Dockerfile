@@ -14,6 +14,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /root
+#todo: check if this is needed
 ENV GOPROXY=off
 ENV GOSUMDB=off
 # Download and extract CodeQL CLI

@@ -7,7 +7,7 @@
         "request": "launch",
         "name": "Bash-Debug",
         "program": "${workspaceFolder}/codeq.sh",
-        "args": ["https://github.com/Meesho/ad-server"],
+        "args": ["https://github.com/Meesho/ads-campaign-management"],
         "env": {},
         "cwd": "${workspaceFolder}"
       }
