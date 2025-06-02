@@ -76,15 +76,26 @@ if [ -f "pom.xml" ]; then
     mvn compile || true
     BIN_DIRS=$(find . -type d -path "*/target/classes" | paste -sd "," -)
     [ -n "$BIN_DIRS" ] && SCANNER_PARAMS="$SCANNER_PARAMS -Dsonar.java.binaries=$BIN_DIRS"
+    echo "📊 Running tests and generating coverage report..."
+    mvn clean test org.jacoco:jacoco-maven-plugin:0.8.11:prepare-agent org.jacoco:jacoco-maven-plugin:0.8.11:report || true
+    [ -f "target/site/jacoco/jacoco.xml" ] && SCANNER_PARAMS="$SCANNER_PARAMS -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml"
 elif [ -f "build.gradle" ]; then
     echo "🔧 Gradle project detected. Compiling..."
     ./gradlew compileJava || true
     [ -d "build/classes" ] && SCANNER_PARAMS="$SCANNER_PARAMS -Dsonar.java.binaries=build/classes"
+    echo "📊 Running tests and generating coverage report..."
+    ./gradlew clean test jacocoTestReport --no-daemon -x check || true
+    [ -f "build/reports/jacoco/test/jacocoTestReport.xml" ] && SCANNER_PARAMS="$SCANNER_PARAMS -Dsonar.coverage.jacoco.xmlReportPaths=build/reports/jacoco/test/jacocoTestReport.xml"
+elif [ -f "go.mod" ]; then
+    echo "🔧 Go project detected..."
+    go build ./... || true
+    echo "📊 Generating Go test coverage report..."
+    go test -coverprofile=coverage.out ./... || true
+    SCANNER_PARAMS="$SCANNER_PARAMS -Dsonar.go.coverage.reportPaths=coverage.out"
 else
-    echo "⚠️ No build system detected. Java files will be excluded."
-    SCANNER_PARAMS="$SCANNER_PARAMS -Dsonar.exclusions=**/*.java"
+    echo "❌ Error: Unsupported project type. Only Java (Maven/Gradle) and Go projects are supported."
+    exit 1
 fi
-
 
 
 
@@ -98,7 +109,22 @@ docker run --rm --network host \
 # Wait for analysis to finish
 echo "⏳ Waiting for analysis to complete..."
 cd - > /dev/null
-sleep 20s
+
+# Poll the analysis status until it completes
+while true; do
+    ANALYSIS_STATUS=$(curl -s -u "$AUTH_TOKEN:" "http://localhost:9000/api/ce/activity?component=$REPO_NAME" | grep -o '"status":"[^"]*"' | head -1 | cut -d'"' -f4)
+    
+    if [ "$ANALYSIS_STATUS" = "SUCCESS" ]; then
+        echo "✅ Analysis completed successfully"
+        break
+    elif [ "$ANALYSIS_STATUS" = "FAILED" ]; then
+        echo "❌ Analysis failed"
+        exit 1
+    else
+        echo "⏳ Analysis still in progress..."
+        sleep 5
+    fi
+done
 
 echo "📊 Fetching analysis results..."
 
