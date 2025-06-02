@@ -24,6 +24,6 @@ codeql pack download codeql/$LANGUAGE-queries
 codeql database analyze codeql-db \
     codeql/$LANGUAGE-queries:codeql-suites/$LANGUAGE-security-and-quality.qls \
     --format=sarif-latest \
-    --output=target/results/$LANGUAGE-results.sarif \
+    --output=target/results/codeql/results.sarif \
     --ram=10000
 

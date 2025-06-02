@@ -76,16 +76,12 @@ if [ -f "pom.xml" ]; then
     mvn compile || true
     BIN_DIRS=$(find . -type d -path "*/target/classes" | paste -sd "," -)
     [ -n "$BIN_DIRS" ] && SCANNER_PARAMS="$SCANNER_PARAMS -Dsonar.java.binaries=$BIN_DIRS"
-    echo "📊 Running tests and generating coverage report..."
-    mvn clean test org.jacoco:jacoco-maven-plugin:0.8.11:prepare-agent org.jacoco:jacoco-maven-plugin:0.8.11:report || true
-    [ -f "target/site/jacoco/jacoco.xml" ] && SCANNER_PARAMS="$SCANNER_PARAMS -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml"
+   
 elif [ -f "build.gradle" ]; then
     echo "🔧 Gradle project detected. Compiling..."
     ./gradlew compileJava || true
     [ -d "build/classes" ] && SCANNER_PARAMS="$SCANNER_PARAMS -Dsonar.java.binaries=build/classes"
-    echo "📊 Running tests and generating coverage report..."
-    ./gradlew clean test jacocoTestReport --no-daemon -x check || true
-    [ -f "build/reports/jacoco/test/jacocoTestReport.xml" ] && SCANNER_PARAMS="$SCANNER_PARAMS -Dsonar.coverage.jacoco.xmlReportPaths=build/reports/jacoco/test/jacocoTestReport.xml"
+   
 elif [ -f "go.mod" ]; then
     echo "🔧 Go project detected..."
     go build ./... || true
