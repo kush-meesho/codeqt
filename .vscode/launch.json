@@ -7,7 +7,7 @@
         "request": "launch",
         "name": "Bash-Debug",
         "program": "${workspaceFolder}/codeq.sh",
-        "args": ["https://github.com/Meesho/ads-campaign-management"],
+        "args": ["https://github.com/Meesho/go-core"],
         "env": {},
         "cwd": "${workspaceFolder}"
       }

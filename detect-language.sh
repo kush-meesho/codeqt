@@ -9,7 +9,7 @@ detect_language() {
         echo "Detected Java project" >&2
     elif [ -f "$clone_dir/go.mod" ]; then
         language="go"
-        echo "Detected Go project"
+        echo "Detected Go project" >&2
     else
         echo "Error: Could not detect language. Repository must be either Java or Go." >&2
         exit 1

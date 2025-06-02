@@ -98,7 +98,7 @@ docker run --rm --network host \
 # Wait for analysis to finish
 echo "⏳ Waiting for analysis to complete..."
 cd - > /dev/null
-sleep 20
+sleep 20s
 
 echo "📊 Fetching analysis results..."
 
