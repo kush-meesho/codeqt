@@ -14,3 +14,11 @@ services:
     environment:
       - REPO_NAME=${REPO_NAME}
       - LANGUAGE=${LANGUAGE}
+
+  sonarqube-analyzer:
+    platform: linux/amd64
+    image: sonarqube:lts
+    ports:
+      - "9000:9000"
+    environment:
+      - SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true

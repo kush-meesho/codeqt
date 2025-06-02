@@ -49,6 +49,11 @@ fi
 cd - > /dev/null
 
 
-echo "Running CodeQL Analyzer"
-chmod +x ./tools-scripts/codeql/codeql-analyzer.sh 
-./tools-scripts/codeql/codeql-analyzer.sh $REPO_NAME $LANGUAGE
+# echo "Running CodeQL Analyzer"
+# chmod +x ./tools-scripts/codeql/codeql-analyzer.sh 
+# ./tools-scripts/codeql/codeql-analyzer.sh $REPO_NAME $LANGUAGE
+
+echo "Running SonarQube Analyzer"
+chmod +x ./tools-scripts/sonar/sonar-analyze.sh
+mkdir -p ./target/results/sonar
+./tools-scripts/sonar/sonar-analyze.sh $REPO_NAME $LANGUAGE
