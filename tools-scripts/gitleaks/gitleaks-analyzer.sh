@@ -12,11 +12,11 @@ REPO_NAME=$1
 LANGUAGE=$2
 
 
-IMAGE_NAME="codeq-codeql-analyzer:latest"
-SERVICE_NAME="codeql-analyzer"
+IMAGE_NAME="codeq-gitleaks-analyzer:latest"
+SERVICE_NAME="gitleaks-analyzer"
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-echo "Inside CodeQL Analyzer"
+echo "Inside Gitleaks Analyzer"
 echo "Script directory: $SCRIPT_DIR"
 
 # Check if image exists locally

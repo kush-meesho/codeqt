@@ -22,3 +22,18 @@ services:
       - "9000:9000"
     environment:
       - SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true
+  
+  gitleaks-analyzer:
+    platform: "linux/amd64"
+    build: ./tools-scripts/gitleaks
+    working_dir: /root
+    volumes:
+      - ./target:/root/target
+    entrypoint: ["/root/entrypoint.sh"]
+    stdin_open: true
+    tty: true
+    environment:
+      - REPO_NAME=${REPO_NAME}
+      - LANGUAGE=${LANGUAGE}
+    
+
