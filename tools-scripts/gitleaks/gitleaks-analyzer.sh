@@ -11,7 +11,7 @@ fi
 REPO_NAME=$1
 LANGUAGE=$2
 
-IMAGE_NAME="codeq-gitleaks-analyzer:latest"
+IMAGE_NAME="codeqt-gitleaks-analyzer:latest"
 SERVICE_NAME="gitleaks-analyzer"
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
@@ -30,3 +30,4 @@ fi
 echo "Starting the container..."
 cd "$SCRIPT_DIR" && REPO_NAME="$REPO_NAME" LANGUAGE="$LANGUAGE" docker-compose up -d --force-recreate "$SERVICE_NAME"
 
+docker wait codeqt-gitleaks-analyzer-1 > /dev/null 2>&1 & 

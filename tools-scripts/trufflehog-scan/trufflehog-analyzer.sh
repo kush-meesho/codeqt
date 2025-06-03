@@ -16,7 +16,7 @@ REPO_DIR="../../target/repo/$REPO_NAME"
 RESULTS_DIR="../../target/results/trufflehog"
 mkdir -p $RESULTS_DIR
 
-IMAGE_NAME="codeq-trufflhog-analyzer:latest"
+IMAGE_NAME="codeqt-trufflhog-analyzer:latest"
 SERVICE_NAME="trufflehog-analyzer"
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
@@ -37,4 +37,4 @@ fi
 echo "Starting the container..."
 cd "$SCRIPT_DIR" && REPO_NAME="$REPO_NAME" LANGUAGE="$LANGUAGE" docker-compose up  -d --force-recreate $SERVICE_NAME
 
-
+docker wait codeqt-trufflehog-analyzer-1 &

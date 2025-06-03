@@ -12,7 +12,7 @@ REPO_NAME=$1
 LANGUAGE=$2
 
 
-IMAGE_NAME="codeq-codeql-analyzer:latest"
+IMAGE_NAME="codeqt-codeql-analyzer:latest"
 SERVICE_NAME="codeql-analyzer"
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
@@ -31,3 +31,4 @@ fi
 echo "Starting the container..."
 cd "$SCRIPT_DIR" && REPO_NAME="$REPO_NAME" LANGUAGE="$LANGUAGE" docker-compose up -d --force-recreate "$SERVICE_NAME"
 
+docker wait codeqt-codeql-analyzer-1 > /dev/null 2>&1 &
