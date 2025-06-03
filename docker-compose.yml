@@ -18,11 +18,37 @@ services:
   sonarqube-analyzer:
     platform: linux/amd64
     image: sonarqube:lts
+    working_dir: /root
     ports:
       - "9000:9000"
     environment:
       - SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true
-  
+
+  sonarqube-analyzer-v2:
+    platform: linux/amd64
+    build: ./tools-scripts/sonarv2/
+    volumes:
+      - ./target:/root/target
+      - ~/.m2:/root/.m2
+    environment:
+      - SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true
+      - REPO_NAME=${REPO_NAME}
+      - LANGUAGE=${LANGUAGE}
+    networks:
+      - sonar-net
+    depends_on:
+      - sonarqube  
+
+  sonarqube:
+    image: sonarqube:latest
+    container_name: sonarqube
+    ports:
+      - "9000:9000"
+    environment:
+      - SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true
+    networks:
+      - sonar-net
+
   trufflehog-analyzer:
     build: ./tools-scripts/trufflehog-scan
     volumes:
@@ -46,3 +72,11 @@ services:
       - LANGUAGE=${LANGUAGE}
     
 
+volumes:
+  sonarqube_data:
+  sonarqube_extensions:
+  sonarqube_logs:
+
+networks:
+  sonar-net:
+    driver: bridge

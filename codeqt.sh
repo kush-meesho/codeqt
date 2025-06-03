@@ -34,7 +34,7 @@ echo "Building project..."
 cd $CLONE_DIR
 if [ $LANGUAGE = "java" ]; then
     echo "Building Java project with Maven..."
-    # mvn clean install -DskipTests
+    mvn clean install -DskipTests
 elif [ $LANGUAGE = "go" ]; then
     echo "Building Go project..."
     echo "Downloading Go dependencies and creating vendor directory..."
@@ -56,37 +56,39 @@ chmod +x ./tools-scripts/codeql/codeql-analyzer.sh
 chmod +x ./tools-scripts/sonar/sonar-analyze.sh
 chmod +x ./tools-scripts/gitleaks/gitleaks-analyzer.sh
 chmod +x ./tools-scripts/trufflehog-scan/trufflehog-analyzer.sh
+chmod +x ./tools-scripts/sonarv2/sonarv2-analyzer.sh
+./tools-scripts/sonarv2/sonarv2-analyzer.sh $REPO_NAME $LANGUAGE 
 
-# Run all analyzers in parallel
-echo "Starting all analyzers in parallel..."
+# # Run all analyzers in parallel
+# echo "Starting all analyzers in parallel..."
 
-# Start CodeQL Analyzer
-echo "Starting CodeQL Analyzer..."
-./tools-scripts/codeql/codeql-analyzer.sh $REPO_NAME $LANGUAGE &
-CODEQL_PID=$!
+# # Start CodeQL Analyzer
+# echo "Starting CodeQL Analyzer..."
+# ./tools-scripts/codeql/codeql-analyzer.sh $REPO_NAME $LANGUAGE &
+# CODEQL_PID=$!
 
-# Start SonarQube Analyzer
-echo "Starting SonarQube Analyzer..."
-./tools-scripts/sonar/sonar-analyze.sh $REPO_NAME $LANGUAGE &
-SONAR_PID=$!
+# # Start SonarQube Analyzer
+# echo "Starting SonarQube Analyzer..."
+# ./tools-scripts/sonar/sonar-analyze.sh $REPO_NAME $LANGUAGE &
+# SONAR_PID=$!
 
-# Start Gitleaks Analyzer
-echo "Starting Gitleaks Analyzer..."
-./tools-scripts/gitleaks/gitleaks-analyzer.sh $REPO_NAME $LANGUAGE &
-GITLEAKS_PID=$!
+# # Start Gitleaks Analyzer
+# echo "Starting Gitleaks Analyzer..."
+# ./tools-scripts/gitleaks/gitleaks-analyzer.sh $REPO_NAME $LANGUAGE &
+# GITLEAKS_PID=$!
 
-# Start Trufflehog Analyzer
-echo "Starting Trufflehog Analyzer..."
-./tools-scripts/trufflehog-scan/trufflehog-analyzer.sh $REPO_NAME $LANGUAGE &
-TRUFFLEHOG_PID=$!
+# # Start Trufflehog Analyzer
+# echo "Starting Trufflehog Analyzer..."
+# ./tools-scripts/trufflehog-scan/trufflehog-analyzer.sh $REPO_NAME $LANGUAGE &
+# TRUFFLEHOG_PID=$!
 
-# Wait for all analyzers to complete
-echo "Waiting for all analyzers to complete..."
-wait $CODEQL_PID
-wait $SONAR_PID
-wait $GITLEAKS_PID
-wait $TRUFFLEHOG_PID
+# # Wait for all analyzers to complete
+# echo "Waiting for all analyzers to complete..."
+# wait $CODEQL_PID
+# wait $SONAR_PID
+# wait $GITLEAKS_PID
+# wait $TRUFFLEHOG_PID
 
-wait
+# wait
 
-echo "All analyzers have completed!"
+# echo "All analyzers have completed!"

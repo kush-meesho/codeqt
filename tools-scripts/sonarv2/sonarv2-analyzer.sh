@@ -9,21 +9,17 @@ if [ -z "$1" ] || [ -z "$2" ]; then
 fi
 
 REPO_NAME=$1
+LANGUAGE=$2
 
 
-echo "REPO_NAME" $REPO_NAME
-REPO_DIR="../../target/repo/$REPO_NAME"
-RESULTS_DIR="../../target/results/trufflehog"
-mkdir -p $RESULTS_DIR
-
-IMAGE_NAME="codeqt-trufflhog-analyzer:latest"
-SERVICE_NAME="trufflehog-analyzer"
+IMAGE_NAME="codeqt-sonarv2-analyzer:latest"
+SERVICE_NAME="sonarqube-analyzer-v2"
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-echo "Inside Trufflehog Analyzer"
-echo "Script directory: $SCRIPT_DIR"
 
-SERVICE_NAME="trufflehog-analyzer"
+
+echo "Inside SonarV2 Analyzer"
+echo "Script directory: $SCRIPT_DIR"
 
 # Check if image exists locally
 if [[ "$(docker images -q "$IMAGE_NAME" 2> /dev/null)" == "" ]]; then
@@ -35,8 +31,8 @@ fi
 
 # Run the container interactively
 echo "Starting the container..."
-cd "$SCRIPT_DIR" && REPO_NAME="$REPO_NAME" LANGUAGE="$LANGUAGE" docker-compose up  -d --force-recreate $SERVICE_NAME
+cd "$SCRIPT_DIR" && REPO_NAME="$REPO_NAME" LANGUAGE="$LANGUAGE" docker-compose up --force-recreate --exit-code-from "$SERVICE_NAME" "$SERVICE_NAME"
 
-docker wait codeqt-trufflehog-analyzer-1 &
+docker wait codeqt-sonarV2-analyzer-1 > /dev/null 2>&1 &
 
-
+docker rm -f sonarqube > /dev/null 2>&1 &
