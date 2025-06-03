@@ -48,18 +48,43 @@ fi
 # Return to original directory
 cd - > /dev/null
 
+# Create all result directories
+mkdir -p ./target/results/{codeql,sonar,gitleaks,trufflehog}
 
-# echo "Running CodeQL Analyzer"
-# chmod +x ./tools-scripts/codeql/codeql-analyzer.sh 
-# mkdir -p ./target/results/codeql
-# ./tools-scripts/codeql/codeql-analyzer.sh $REPO_NAME $LANGUAGE
+# Make all analyzer scripts executable
+chmod +x ./tools-scripts/codeql/codeql-analyzer.sh
+chmod +x ./tools-scripts/sonar/sonar-analyze.sh
+chmod +x ./tools-scripts/gitleaks/gitleaks-analyzer.sh
+chmod +x ./tools-scripts/trufflehog-scan/trufflehog-analyzer.sh
 
-# echo "Running SonarQube Analyzer"
-# chmod +x ./tools-scripts/sonar/sonar-analyze.sh
-# mkdir -p ./target/results/sonar
-# ./tools-scripts/sonar/sonar-analyze.sh $REPO_NAME $LANGUAGE
+# Run all analyzers in parallel
+echo "Starting all analyzers in parallel..."
 
-echo "Running Gitleaks Analyzer"
-chmod +x ./tools-scripts/gitleaks/gitleaks-analyzer.sh 
-mkdir -p ./target/results/gitleaks
-./tools-scripts/gitleaks/gitleaks-analyzer.sh $REPO_NAME $LANGUAGE
+# # Start CodeQL Analyzer
+# echo "Starting CodeQL Analyzer..."
+# ./tools-scripts/codeql/codeql-analyzer.sh $REPO_NAME $LANGUAGE &
+# CODEQL_PID=$!
+
+# Start SonarQube Analyzer
+echo "Starting SonarQube Analyzer..."
+./tools-scripts/sonar/sonar-analyze.sh $REPO_NAME $LANGUAGE &
+SONAR_PID=$!
+
+# # Start Gitleaks Analyzer
+# echo "Starting Gitleaks Analyzer..."
+# ./tools-scripts/gitleaks/gitleaks-analyzer.sh $REPO_NAME $LANGUAGE &
+# GITLEAKS_PID=$!
+
+# # Start Trufflehog Analyzer
+# echo "Starting Trufflehog Analyzer..."
+# ./tools-scripts/trufflehog-scan/trufflehog-analyzer.sh $REPO_NAME $LANGUAGE &
+# TRUFFLEHOG_PID=$!
+
+# Wait for all analyzers to complete
+echo "Waiting for all analyzers to complete..."
+# wait $CODEQL_PID
+wait $SONAR_PID
+# wait $GITLEAKS_PID
+# wait $TRUFFLEHOG_PID
+
+echo "All analyzers have completed!"

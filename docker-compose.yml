@@ -23,6 +23,15 @@ services:
     environment:
       - SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true
   
+  trufflehog-analyzer:
+    build: ./tools-scripts/trufflehog-scan
+    volumes:
+      - ./target:/root/target
+    entrypoint: ["/root/entrypoint.sh"]
+    environment:
+      - REPO_NAME=${REPO_NAME}
+      - LANGUAGE=${LANGUAGE}  
+      
   gitleaks-analyzer:
     platform: "linux/amd64"
     build: ./tools-scripts/gitleaks

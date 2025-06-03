@@ -9,14 +9,21 @@ if [ -z "$1" ] || [ -z "$2" ]; then
 fi
 
 REPO_NAME=$1
-LANGUAGE=$2
 
-IMAGE_NAME="codeq-gitleaks-analyzer:latest"
-SERVICE_NAME="gitleaks-analyzer"
+
+echo "REPO_NAME" $REPO_NAME
+REPO_DIR="../../target/repo/$REPO_NAME"
+RESULTS_DIR="../../target/results/trufflehog"
+mkdir -p $RESULTS_DIR
+
+IMAGE_NAME="codeq-trufflhog-analyzer:latest"
+SERVICE_NAME="trufflehog-analyzer"
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-echo "Inside Gitleaks Analyzer"
+echo "Inside Trufflehog Analyzer"
 echo "Script directory: $SCRIPT_DIR"
+
+SERVICE_NAME="trufflehog-analyzer"
 
 # Check if image exists locally
 if [[ "$(docker images -q "$IMAGE_NAME" 2> /dev/null)" == "" ]]; then
@@ -28,5 +35,6 @@ fi
 
 # Run the container interactively
 echo "Starting the container..."
-cd "$SCRIPT_DIR" && REPO_NAME="$REPO_NAME" LANGUAGE="$LANGUAGE" docker-compose up -d --force-recreate "$SERVICE_NAME"
+cd "$SCRIPT_DIR" && REPO_NAME="$REPO_NAME" LANGUAGE="$LANGUAGE" docker-compose up  -d --force-recreate $SERVICE_NAME
+
 

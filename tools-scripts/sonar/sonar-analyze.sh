@@ -15,7 +15,7 @@ LANGUAGE=$2
 echo "REPO_NAME" $REPO_NAME
 REPO_DIR="../../target/repo/$REPO_NAME"
 RESULTS_DIR="../../target/results/sonar"
-mkdir -p $RESULTS_DIR
+
 
 IMAGE_NAME="codeq-sonar-analyzer:latest"
 SERVICE_NAME="sonar-analyzer"

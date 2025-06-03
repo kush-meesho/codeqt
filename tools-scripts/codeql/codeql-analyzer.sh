@@ -29,5 +29,5 @@ fi
 
 # Run the container interactively
 echo "Starting the container..."
-cd "$SCRIPT_DIR" && REPO_NAME="$REPO_NAME" LANGUAGE="$LANGUAGE" docker-compose run "$SERVICE_NAME"
+cd "$SCRIPT_DIR" && REPO_NAME="$REPO_NAME" LANGUAGE="$LANGUAGE" docker-compose up -d --force-recreate "$SERVICE_NAME"
 
