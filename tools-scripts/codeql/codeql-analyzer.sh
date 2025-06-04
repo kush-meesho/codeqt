@@ -29,6 +29,5 @@ fi
 
 # Run the container interactively
 echo "Starting the container..."
-cd "$SCRIPT_DIR" && REPO_NAME="$REPO_NAME" LANGUAGE="$LANGUAGE" docker-compose up -d --force-recreate "$SERVICE_NAME"
+cd "$SCRIPT_DIR" && REPO_NAME="$REPO_NAME" LANGUAGE="$LANGUAGE" docker-compose up  -d --force-recreate "$SERVICE_NAME"
 
-docker wait codeqt-codeql-analyzer-1 > /dev/null 2>&1 &

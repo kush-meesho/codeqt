@@ -31,8 +31,4 @@ fi
 
 # Run the container interactively
 echo "Starting the container..."
-cd "$SCRIPT_DIR" && REPO_NAME="$REPO_NAME" LANGUAGE="$LANGUAGE" docker-compose up --force-recreate --exit-code-from "$SERVICE_NAME" "$SERVICE_NAME"
-
-docker wait codeqt-sonar-analyzer-1 > /dev/null 2>&1 &
-
-docker rm -f sonarqube > /dev/null 2>&1 &
+cd "$SCRIPT_DIR" && REPO_NAME="$REPO_NAME" LANGUAGE="$LANGUAGE" docker-compose up -d --force-recreate "$SERVICE_NAME"

@@ -90,4 +90,4 @@ wait $TRUFFLEHOG_PID
 
 wait
 
-echo "All analyzers have completed!"
+echo "All analyzers have completed! Wait for the results to be generated..."
