@@ -12,13 +12,13 @@ REPO_NAME=$1
 LANGUAGE=$2
 
 
-IMAGE_NAME="codeqt-sonarv2-analyzer:latest"
-SERVICE_NAME="sonarqube-analyzer-v2"
+IMAGE_NAME="codeqt-sonar-analyzer:latest"
+SERVICE_NAME="sonarqube-analyzer"
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 
 
-echo "Inside SonarV2 Analyzer"
+echo "Inside Sonar Analyzer"
 echo "Script directory: $SCRIPT_DIR"
 
 # Check if image exists locally
@@ -33,6 +33,6 @@ fi
 echo "Starting the container..."
 cd "$SCRIPT_DIR" && REPO_NAME="$REPO_NAME" LANGUAGE="$LANGUAGE" docker-compose up --force-recreate --exit-code-from "$SERVICE_NAME" "$SERVICE_NAME"
 
-docker wait codeqt-sonarV2-analyzer-1 > /dev/null 2>&1 &
+docker wait codeqt-sonar-analyzer-1 > /dev/null 2>&1 &
 
 docker rm -f sonarqube > /dev/null 2>&1 &
