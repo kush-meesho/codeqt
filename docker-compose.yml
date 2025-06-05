@@ -76,6 +76,17 @@ services:
       - REPO_NAME=${REPO_NAME}
       - LANGUAGE=${LANGUAGE}  
 
+  grype-analyzer:
+    platform: linux/amd64
+    build: ./tools-scripts/grype
+    working_dir: /
+    volumes:
+      - ./target:/root/target
+    entrypoint: ["/root/entrypoint.sh"]
+    environment:
+      - REPO_NAME=${REPO_NAME}
+      - LANGUAGE=${LANGUAGE}  
+
 volumes:
   sonarqube_data:
   sonarqube_extensions:
