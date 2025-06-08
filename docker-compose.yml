@@ -86,6 +86,16 @@ services:
     environment:
       - REPO_NAME=${REPO_NAME}
       - LANGUAGE=${LANGUAGE}  
+  semgrep-analyzer:
+    platform: linux/amd64
+    build: ./tools-scripts/semgrep
+    working_dir: /
+    volumes:
+      - ./target:/root/target
+    entrypoint: ["/root/entrypoint.sh"]
+    environment:
+      - REPO_NAME=${REPO_NAME}
+      - LANGUAGE=${LANGUAGE} 
 
 volumes:
   sonarqube_data:

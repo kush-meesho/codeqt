@@ -49,7 +49,7 @@ fi
 cd - > /dev/null
 
 # Create all result directories
-mkdir -p ./target/results/{codeql,sonar,gitleaks,trufflehog,owasp,grype}
+mkdir -p ./target/results/{codeql,sonar,gitleaks,trufflehog,owasp,grype,semgrep}
 
 # Make all analyzer scripts executable
 chmod +x ./tools-scripts/codeql/codeql-analyzer.sh
@@ -58,7 +58,7 @@ chmod +x ./tools-scripts/gitleaks/gitleaks-analyzer.sh
 chmod +x ./tools-scripts/trufflehog-scan/trufflehog-analyzer.sh
 chmod +x ./tools-scripts/owasp/owasp-analyzer.sh
 chmod +x ./tools-scripts/grype/grype-analyzer.sh
-
+chmod +x ./tools-scripts/semgrep/semgrep-analyzer.sh
 
 # Run all analyzers in parallel
 echo "Starting all analyzers in parallel..."
@@ -87,9 +87,13 @@ echo "Starting all analyzers in parallel..."
 # ./tools-scripts/owasp/owasp-analyzer.sh $REPO_NAME $LANGUAGE &
 # OWASP_PID=$!
 
-echo "Starting Grype Analyzer..."
-./tools-scripts/grype/grype-analyzer.sh $REPO_NAME $LANGUAGE &
-GRYPE_PID=$!
+# echo "Starting Grype Analyzer..."
+# ./tools-scripts/grype/grype-analyzer.sh $REPO_NAME $LANGUAGE &
+# GRYPE_PID=$!
+
+echo "Starting Semgrep Analyzer..."
+./tools-scripts/semgrep/semgrep-analyzer.sh $REPO_NAME $LANGUAGE &
+SEMGREP_PID=$!
 
 # Wait for all analyzers to complete
 echo "Waiting for all analyzers to complete..."
@@ -98,7 +102,8 @@ echo "Waiting for all analyzers to complete..."
 # wait $GITLEAKS_PID
 # wait $TRUFFLEHOG_PID
 # wait $OWASP_PID
-wait $GRYPE_PID
+# wait $GRYPE_PID
+wait $SEMGREP_PID
 wait
 
 echo "All analyzers have completed! Wait for the results to be generated..."
