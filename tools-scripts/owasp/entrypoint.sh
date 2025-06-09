@@ -20,6 +20,7 @@ echo "Running OWASP Dependency Check analysis on: ${REPO_PATH}"
     --out ${RESULTS_DIR} \
     --project "${REPO_NAME}" \
     --disableCentral \
-    --failOnCVSS 0
+    --failOnCVSS 0 \
+    --nvdApiKey ${NVD_API_KEY}
 
 echo "OWASP Dependency Check analysis completed. Results saved in /root/target/results/owasp/"
