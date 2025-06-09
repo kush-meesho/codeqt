@@ -75,7 +75,7 @@ services:
     environment:
       - REPO_NAME=${REPO_NAME}
       - LANGUAGE=${LANGUAGE}  
-      - NVD_API_KEY=b6bbace4-ddca-499b-b55d-4f8321370d91
+      - NVD_API_KEY=${NVD_API_KEY}
 
   grype-analyzer:
     platform: linux/amd64
