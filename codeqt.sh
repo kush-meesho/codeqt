@@ -2,6 +2,8 @@
 
 set -e
 
+cd "$(dirname "${BASH_SOURCE[0]}")"
+
 source ./detect-language.sh
 source ./extract-repo-name.sh
 source ./setup-repo.sh
@@ -83,17 +85,17 @@ echo "Starting all analyzers in parallel..."
 # ./tools-scripts/trufflehog-scan/trufflehog-analyzer.sh $REPO_NAME $LANGUAGE &
 # TRUFFLEHOG_PID=$!
 
-echo "Starting Owasp Analyzer..."
-./tools-scripts/owasp/owasp-analyzer.sh $REPO_NAME $LANGUAGE &
-OWASP_PID=$!
+# echo "Starting Owasp Analyzer..."
+# ./tools-scripts/owasp/owasp-analyzer.sh $REPO_NAME $LANGUAGE &
+# OWASP_PID=$!
 
 # echo "Starting Grype Analyzer..."
 # ./tools-scripts/grype/grype-analyzer.sh $REPO_NAME $LANGUAGE &
 # GRYPE_PID=$!
 
-# echo "Starting Semgrep Analyzer..."
-# ./tools-scripts/semgrep/semgrep-analyzer.sh $REPO_NAME $LANGUAGE &
-# SEMGREP_PID=$!
+echo "Starting Semgrep Analyzer..."
+./tools-scripts/semgrep/semgrep-analyzer.sh $REPO_NAME $LANGUAGE &
+SEMGREP_PID=$!
 
 # Wait for all analyzers to complete
 echo "Waiting for all analyzers to complete..."
@@ -101,9 +103,9 @@ echo "Waiting for all analyzers to complete..."
 # wait $SONAR_PID
 # wait $GITLEAKS_PID
 # wait $TRUFFLEHOG_PID
-wait $OWASP_PID
+# wait $OWASP_PID
 # wait $GRYPE_PID
-# wait $SEMGREP_PID
+wait $SEMGREP_PID
 wait
 
 echo "All analyzers have completed! Wait for the results to be generated..."
