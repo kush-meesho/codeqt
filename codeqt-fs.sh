@@ -8,26 +8,32 @@ source ./detect-language.sh
 source ./extract-repo-name.sh
 source ./setup-repo.sh
 
-# Check if repo URL is provided
+# Check if repo path is provided
 if [ -z "$1" ]; then
-  echo "Usage: $0 <repo_url>"
+  echo "Usage: $0 <repo_path>"
   exit 1
 fi
 
 rm -rf ./target
 mkdir -p ./target
 
-REPO_URL="$1"
-echo "REPO_URL" $REPO_URL
-REPO_NAME=$(extract_repo_name $REPO_URL)
+
+REPO_PATH="$1"
+echo "REPO_PATH" $REPO_PATH
+REPO_NAME=$(basename $REPO_PATH)
 echo $REPO_NAME
-CLONE_DIR=$(setup_and_clone_repo $REPO_URL)
+mkdir -p "./target/repo"
+cp -r $REPO_PATH "./target/repo/$REPO_NAME"
+CLONE_DIR="./target/repo/$REPO_NAME"
 echo "CLONE_DIR" $CLONE_DIR
+
+
 LANGUAGE=$(detect_language $CLONE_DIR)
 
 echo "Detected language: $LANGUAGE"
 
 echo "REPO_NAME" $REPO_NAME
+
 
 # Run build commands based on language
 echo "Building project..."

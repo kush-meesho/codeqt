@@ -84,7 +84,7 @@ METRICS=$(curl -s -u "$AUTH_TOKEN:" "http://sonarqube:9000/api/measures/componen
 ISSUES=$(curl -s -u "$AUTH_TOKEN:" "http://sonarqube:9000/api/issues/search?componentKeys=$REPO_NAME")
 
 echo $METRICS > metrics.json
-echo $ISSUES > issues.json
+echo $ISSUES > results.json
 
 cat > "summary.txt" << EOF
 SonarQube Analysis Summary
