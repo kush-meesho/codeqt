@@ -36,7 +36,7 @@ echo "Building project..."
 cd $CLONE_DIR
 if [ $LANGUAGE = "java" ]; then
     echo "Building Java project with Maven..."
-    # mvn clean install -DskipTests
+    mvn clean install -DskipTests
 elif [ $LANGUAGE = "go" ]; then
     echo "Building Go project..."
     echo "Downloading Go dependencies and creating vendor directory..."
