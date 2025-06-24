@@ -115,3 +115,61 @@ wait $SEMGREP_PID
 wait
 
 echo "All analyzers have completed! Wait for the results to be generated..."
+
+# Get current branch name from the repository
+cd $CLONE_DIR
+BRANCH_NAME=$(git branch --show-current)
+if [ -z "$BRANCH_NAME" ]; then
+    BRANCH_NAME="main"
+fi
+cd - > /dev/null
+
+echo "Current branch: $BRANCH_NAME"
+
+# Create timestamp for results directory
+TIMESTAMP=$(date +%s)
+RESULTS_DEST_DIR="$HOME/Documents/codeqt/$REPO_NAME/$BRANCH_NAME/$TIMESTAMP/results"
+
+echo "Results will be copied to: $RESULTS_DEST_DIR"
+
+# Function to monitor Docker containers and copy results
+monitor_and_copy_results() {
+    local repo_name="$1"
+    local results_dest_dir="$2"
+    
+    echo "Starting background monitoring of Docker containers..."
+    
+    # Wait for all codeqt-* containers to exit
+    while true; do
+        # Check if any codeqt-* containers are still running
+        running_containers=$(docker ps --filter "name=codeqt-" --format "{{.Names}}" 2>/dev/null || true)
+        
+        if [ -z "$running_containers" ]; then
+            echo "All codeqt-* containers have exited. Copying results..."
+            break
+        else
+            echo "Waiting for containers to exit: $running_containers"
+            sleep 10
+        fi
+    done
+    
+    # Create destination directory
+    mkdir -p "$results_dest_dir"
+    
+    # Copy results
+    if [ -d "./target/results" ]; then
+        cp -r ./target/results/* "$results_dest_dir/"
+        echo "Results copied successfully to: $results_dest_dir"
+    else
+        echo "Warning: ./target/results directory not found"
+    fi
+    
+    echo "Analysis complete! Results available at: $results_dest_dir"
+}
+
+# Start background monitoring
+monitor_and_copy_results "$REPO_NAME" "$RESULTS_DEST_DIR" &
+MONITOR_PID=$!
+
+echo "Background monitoring started with PID: $MONITOR_PID"
+echo "You can check the progress by monitoring the containers with: docker ps --filter 'name=codeqt-'"
