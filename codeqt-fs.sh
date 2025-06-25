@@ -133,6 +133,7 @@ monitor_and_copy_results() {
     fi
     
     echo "Analysis complete! Results available at: $results_dest_dir"
+    open -na "Google Chrome" --args --new-window "http://localhost:8081"
 }
 
 # Start background monitoring
