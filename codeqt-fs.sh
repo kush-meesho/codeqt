@@ -47,7 +47,7 @@ elif [ $LANGUAGE = "go" ]; then
     echo "Building Go project..."
     echo "Downloading Go dependencies and creating vendor directory..."
     go mod download
-    go mod vendor
+    go build ./...
 
 else
     echo "Error: Unsupported language '$LANGUAGE'. Only Java and Go are supported."

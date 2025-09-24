@@ -18,7 +18,7 @@ if [ "$LANGUAGE" != "java" ] && [ "$LANGUAGE" != "go" ]; then
     exit 1
 fi
 
-codeql database create codeql-db --language="$LANGUAGE" --source-root="target/repo/$REPO_NAME" --command="mvn clean install -DskipTests --ram=10000 --threads=8"
+codeql database create codeql-db --language="$LANGUAGE" --source-root="target/repo/$REPO_NAME"   --no-run-unnecessary-builds
 codeql pack download codeql/$LANGUAGE-all
 codeql pack download codeql/$LANGUAGE-queries
 codeql database analyze codeql-db \
