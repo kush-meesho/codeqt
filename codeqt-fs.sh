@@ -42,12 +42,12 @@ echo "Building project..."
 cd $CLONE_DIR
 if [ $LANGUAGE = "java" ]; then
     echo "Building Java project with Maven..."
-    # mvn clean install -DskipTests
+    mvn clean install -DskipTests
 elif [ $LANGUAGE = "go" ]; then
     echo "Building Go project..."
     echo "Downloading Go dependencies and creating vendor directory..."
     go mod download
-    go mod vendor
+    go build ./...
 
 else
     echo "Error: Unsupported language '$LANGUAGE'. Only Java and Go are supported."
@@ -57,16 +57,11 @@ fi
 cd - > /dev/null
 
 # Create all result directories
-mkdir -p ./target/results/{codeql,sonar,gitleaks,trufflehog,owasp,grype,semgrep}
+mkdir -p ./target/results/{codeql,sonar}
 
 # Make all analyzer scripts executable
 chmod +x ./tools-scripts/codeql/codeql-analyzer.sh
 chmod +x ./tools-scripts/sonar/sonar-analyzer.sh
-chmod +x ./tools-scripts/gitleaks/gitleaks-analyzer.sh
-chmod +x ./tools-scripts/trufflehog-scan/trufflehog-analyzer.sh
-chmod +x ./tools-scripts/owasp/owasp-analyzer.sh
-chmod +x ./tools-scripts/grype/grype-analyzer.sh
-chmod +x ./tools-scripts/semgrep/semgrep-analyzer.sh
 
 # Run all analyzers in parallel
 echo "Starting all analyzers in parallel..."
@@ -81,37 +76,10 @@ echo "Starting SonarQube Analyzer..."
 ./tools-scripts/sonar/sonar-analyzer.sh $REPO_NAME $LANGUAGE &
 SONAR_PID=$!
 
-# Start Gitleaks Analyzer
-echo "Starting Gitleaks Analyzer..."
-./tools-scripts/gitleaks/gitleaks-analyzer.sh $REPO_NAME $LANGUAGE &
-GITLEAKS_PID=$!
-
-# Start Trufflehog Analyzer
-echo "Starting Trufflehog Analyzer..."
-./tools-scripts/trufflehog-scan/trufflehog-analyzer.sh $REPO_NAME $LANGUAGE &
-TRUFFLEHOG_PID=$!
-
-echo "Starting Owasp Analyzer..."
-./tools-scripts/owasp/owasp-analyzer.sh $REPO_NAME $LANGUAGE &
-OWASP_PID=$!
-
-echo "Starting Grype Analyzer..."
-./tools-scripts/grype/grype-analyzer.sh $REPO_NAME $LANGUAGE &
-GRYPE_PID=$!
-
-echo "Starting Semgrep Analyzer..."
-./tools-scripts/semgrep/semgrep-analyzer.sh $REPO_NAME $LANGUAGE &
-SEMGREP_PID=$!
-
 # Wait for all analyzers to complete
 echo "Waiting for all analyzers to complete..."
 wait $CODEQL_PID
 wait $SONAR_PID
-wait $GITLEAKS_PID
-wait $TRUFFLEHOG_PID
-wait $OWASP_PID
-wait $GRYPE_PID
-wait $SEMGREP_PID
 wait
 
 echo "All analyzers have completed! Wait for the results to be generated..."
@@ -165,6 +133,7 @@ monitor_and_copy_results() {
     fi
     
     echo "Analysis complete! Results available at: $results_dest_dir"
+    open -na "Google Chrome" --args --new-window "http://localhost:8081"
 }
 
 # Start background monitoring
