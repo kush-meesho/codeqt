@@ -154,8 +154,24 @@ monitor_and_copy_results() {
         echo "⚠️  No SonarQube results.json file found"
     fi
     
+    # Generate HTML report
+    echo "🔧 Generating combined HTML report..."
+    # Source the HTML report generator
+    source "$(dirname "$0")/generate-html-report.sh"
+    
+    # Generate the report
+    if generate_html_report "$results_dest_dir" "$repo_name" "$BRANCH_NAME" "$TIMESTAMP"; then
+        echo "✅ HTML report generated successfully"
+        # Open the HTML report in Chrome
+        if [ -f "$results_dest_dir/combined-report.html" ]; then
+            echo "🌐 Opening HTML report in Chrome..."
+            open -na "Google Chrome" --args --new-window "file://$results_dest_dir/combined-report.html"
+        fi
+    else
+        echo "⚠️  HTML report generation failed"
+    fi
+    
     echo "Analysis complete! Results available at: $results_dest_dir"
-    open -na "Google Chrome" --args --new-window "http://localhost:8081"
 }
 
 # Start background monitoring
