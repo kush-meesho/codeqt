@@ -121,15 +121,37 @@ monitor_and_copy_results() {
         fi
     done
     
-    # Create destination directory
-    mkdir -p "$results_dest_dir"
+    # Create destination directories
+    mkdir -p "$results_dest_dir/codeql"
+    mkdir -p "$results_dest_dir/sonar"
     
-    # Copy results
-    if [ -d "./target/results" ]; then
-        cp -r ./target/results/* "$results_dest_dir/"
-        echo "Results copied successfully to: $results_dest_dir"
+    # Convert SARIF to JSON if CodeQL results exist and copy results.json
+    if [ -f "./target/results/codeql/results.sarif" ]; then
+        echo "Converting CodeQL SARIF to JSON format..."
+        
+        # Ensure sarif-converter.sh is executable
+        chmod +x "$(dirname "$0")/sarif-converter.sh"
+        
+        # Convert SARIF to JSON in target directory first
+        "$(dirname "$0")/sarif-converter.sh" \
+            "./target/results/codeql/results.sarif" \
+            "./target/results/codeql/results.json"
+        
+        # Copy only the results.json file
+        if [ -f "./target/results/codeql/results.json" ]; then
+            cp "./target/results/codeql/results.json" "$results_dest_dir/codeql/"
+            echo "✅ CodeQL results.json copied to: $results_dest_dir/codeql/"
+        fi
     else
-        echo "Warning: ./target/results directory not found"
+        echo "⚠️  No CodeQL SARIF file found to convert"
+    fi
+    
+    # Copy SonarQube results.json if it exists
+    if [ -f "./target/results/sonar/results.json" ]; then
+        cp "./target/results/sonar/results.json" "$results_dest_dir/sonar/"
+        echo "✅ SonarQube results.json copied to: $results_dest_dir/sonar/"
+    else
+        echo "⚠️  No SonarQube results.json file found"
     fi
     
     echo "Analysis complete! Results available at: $results_dest_dir"

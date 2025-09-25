@@ -18,8 +18,7 @@ if [ "$LANGUAGE" != "java" ] && [ "$LANGUAGE" != "go" ]; then
     exit 1
 fi
 
-codeql database create codeql-db --language="$LANGUAGE" --source-root="target/repo/$REPO_NAME"   --no-run-unnecessary-builds
-codeql pack download codeql/$LANGUAGE-all
+codeql database create codeql-db --language="$LANGUAGE" --source-root="target/repo/$REPO_NAME" --no-run-unnecessary-builds
 codeql pack download codeql/$LANGUAGE-queries
 codeql database analyze codeql-db \
     codeql/$LANGUAGE-queries:codeql-suites/$LANGUAGE-security-and-quality.qls \

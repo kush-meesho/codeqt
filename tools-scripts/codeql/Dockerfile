@@ -13,12 +13,11 @@ RUN apt-get update && \
         golang-go && \
     rm -rf /var/lib/apt/lists/*
 
-WORKDIR /root
-#todo: check if this is needed
+
+    WORKDIR /root
 ENV GOPROXY=off
 ENV GOSUMDB=off
-# Download and extract CodeQL CLI
-RUN curl -L -o codeql.zip https://github.com/github/codeql-cli-binaries/releases/download/v2.21.3/codeql-linux64.zip && \
+RUN curl -L -o codeql.zip https://github.com/github/codeql-cli-binaries/releases/latest/download/codeql-linux64.zip && \
     unzip codeql.zip && \
     rm codeql.zip && \
     CODEQL_DIR=$(find . -maxdepth 1 -type d -name "codeql*") && \
