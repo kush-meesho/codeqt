@@ -40,7 +40,8 @@ cd $REPO_DIR
 SCANNER_PARAMS="-Dsonar.projectKey=$REPO_NAME -Dsonar.sources=. -Dsonar.host.url=http://sonarqube:9000 -Dsonar.token=$AUTH_TOKEN"
 
 if [ -f "pom.xml" ]; then
-    BIN_DIRS=$(find . -type d -path "*/target/classes" | paste -sd "," -)
+    # BIN_DIRS=$(find . -type d -path "*/target/classes" | paste -sd "," -)
+    BIN_DIRS=$(find . -type d -path "*/target/classes" | while read dir; do echo "$(pwd)/$dir"; done | paste -sd "," -)
     [ -n "$BIN_DIRS" ] && SCANNER_PARAMS="$SCANNER_PARAMS -Dsonar.java.binaries=$BIN_DIRS"
    
 elif [ -f "build.gradle" ]; then
