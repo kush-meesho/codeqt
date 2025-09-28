@@ -30,4 +30,5 @@ fi
 
 # Execute the main codeqt script with the repository path
 echo "CodeQT: Starting analysis..."
-exec "$CODEQT_SCRIPT" "$REPO_PATH"
+# exec "$CODEQT_SCRIPT" "$REPO_PATH"
+nohup "$CODEQT_SCRIPT" "$REPO_PATH" > /dev/null 2>&1 &
