@@ -45,8 +45,9 @@ if [ $LANGUAGE = "java" ]; then
     mvn clean install -DskipTests
 elif [ $LANGUAGE = "go" ]; then
     echo "Building Go project..."
-    echo "Downloading Go dependencies and creating vendor directory..."
+    echo "Downloading Go dependencies"
     go mod download
+    go mod vendor
     go build ./...
 
 else

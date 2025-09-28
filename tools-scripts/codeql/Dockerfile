@@ -9,14 +9,17 @@ RUN apt-get update && \
         ca-certificates \
         git \
         procps \
-        maven \
-        golang-go && \
+        maven &&\
+        # golang-go && \
     rm -rf /var/lib/apt/lists/*
 
+RUN curl -L https://go.dev/dl/go1.24.4.linux-amd64.tar.gz | tar -C /usr/local -xz
 
-    WORKDIR /root
-ENV GOPROXY=off
-ENV GOSUMDB=off
+ENV PATH="/usr/local/go/bin:${PATH}"
+ENV GOPROXY=https://proxy.golang.org,direct
+ENV GOSUMDB=sum.golang.org
+
+WORKDIR /root
 RUN curl -L -o codeql.zip https://github.com/github/codeql-cli-binaries/releases/latest/download/codeql-linux64.zip && \
     unzip codeql.zip && \
     rm codeql.zip && \
